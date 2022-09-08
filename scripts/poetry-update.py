@@ -5,12 +5,15 @@ import sys
 
 import toml
 
+failed = []
+
 with open("pyproject.toml", encoding="utf-8") as f:
     # Parse the TOML file
     pyproject = toml.load(f)
 
     # Get dependencies
     dependencies = pyproject["tool"]["poetry"]["dependencies"]
+    dependencies.update(pyproject["tool"]["poetry"]["dev-dependencies"])
     for dep in dependencies:
         extras = ""
         dep_version = dependencies[dep]
@@ -41,7 +44,9 @@ with open("pyproject.toml", encoding="utf-8") as f:
                 shell=True,
             )
         except subprocess.CalledProcessError as e:
-            sys.exit(f"Failed for {dep}\n{e}")
+            #sys.exit(f"Failed for {dep}\n{e}")
+            #append to failed
+            failed.append(dep)
 
 # Run a extra 'poetry update' for fun
 try:
@@ -55,3 +60,9 @@ try:
     )
 except subprocess.CalledProcessError as e:
     sys.exit(f"Failed to run final update\n{e}")
+
+# Print failed
+if failed:
+    print("Failed to update:")
+    for dep in failed:
+        print(dep)
