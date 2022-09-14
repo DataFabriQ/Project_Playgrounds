@@ -44,8 +44,8 @@ with open("pyproject.toml", encoding="utf-8") as f:
                 shell=True,
             )
         except subprocess.CalledProcessError as e:
-            #sys.exit(f"Failed for {dep}\n{e}")
-            #append to failed
+            # sys.exit(f"Failed for {dep}\n{e}")
+            # append to failed
             failed.append(dep)
 
 # Run a extra 'poetry update' for fun
